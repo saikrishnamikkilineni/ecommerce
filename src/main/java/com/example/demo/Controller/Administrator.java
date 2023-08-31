@@ -4,6 +4,8 @@ package com.example.demo.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,75 +22,116 @@ import com.example.demo.Service.OrdersImpl;
 import com.example.demo.Service.ServiceImpl;
 import com.example.demo.Service.UsersImpl;
 
-@RestController
+@RestController 
 public class Administrator {
 
 	@Autowired
 	ServiceImpl ServiceInterface;
 	
 	@PostMapping("/addProduct")
-	public Product addProduct(@RequestBody Product product) {
+	public ResponseEntity<Product> addProduct(@RequestBody Product product) {
 		ServiceInterface.addProduct(product);
-		return  product;
+		return ResponseEntity.status(HttpStatus.CREATED).body(product);
 	}
 	
 	@DeleteMapping("/deleteBystock")
-	public void deleteBystock(@RequestBody Product product) {
+	public ResponseEntity<Void> deleteBystock(@RequestBody Product product) {
 		ServiceInterface.deleteBystock(product.getStock());
-	
+		return ResponseEntity.noContent().build();	
 	}
 	
 	@GetMapping("/getProductByname") 
-	public Product getProductByname(@RequestBody Product product) {
-		 return ServiceInterface.getProductByname(product.getProduct_name());
+	public ResponseEntity<Product> getProductByname(@RequestBody Product product) {
+		Product foundProduct=ServiceInterface.getProductByname(product.getProduct_name());
+		 return ResponseEntity.ok(foundProduct);
 	}
+	
+	@GetMapping("/viewproduct")
+    public List<Product> getAllProducts(){
+		return ServiceInterface.getAllProduct();	
+    }
+    
+	
 	
 	@Autowired
 	UsersImpl UsersInterface;
 	
 	@PostMapping("/addUsers")
-	public Users addUsers(@RequestBody Users users) {
-		return UsersInterface.addUsers(users);
+	public ResponseEntity<Users> addUsers(@RequestBody Users users) {
+		Users addedUser= UsersInterface.addUsers(users);
+		return ResponseEntity.ok(addedUser);
 	}
 	
 	@PutMapping("/{user_Id}/blockUser")
-	public Users blockUser(@PathVariable int user_Id) {
-		return UsersInterface.blockUser(user_Id);
+	public ResponseEntity<Users> blockUser(@PathVariable int user_Id) {
+		Users blockUser =UsersInterface.blockUser(user_Id);
+		if(blockUser!=null) {
+			return ResponseEntity.ok(blockUser);
+		}
+		else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 	@PutMapping("/{user_Id}/unblock")
-	public Users unblock(@PathVariable int user_Id) {
-		return UsersInterface.unblock(user_Id);
+	public ResponseEntity<Users> unblock(@PathVariable int user_Id) {
+		Users unBlock =UsersInterface.unblock(user_Id);
+		if(unBlock != null) {
+			return ResponseEntity.ok(unBlock);
+			
+		}
+		else {
+			return ResponseEntity.notFound().build();		
+			}
 	}
 	
 	@DeleteMapping("/deleteUsers")
-	public void deleteUsers(@RequestBody Users users) {
+	public ResponseEntity<Void> deleteUsers(@RequestBody Users users) {
 		UsersInterface.deleteUsers(users.getUser_id());
-	}
+		return ResponseEntity.notFound().build();	
+		}
+	
 	
 	@GetMapping("/getUsersById") 
-	public  List<Users> getUsersById() {
-		return UsersInterface.getUsersById();
-		
+	public  ResponseEntity<List<Users>> getUsersById() {
+		List<Users> users=  UsersInterface.getUsersById();
+		if(!users.isEmpty()) {
+			return ResponseEntity.ok(users);
+		}
+		else {
+			return ResponseEntity.noContent().build();		
+					}
 	}
+	
 	
 	
 	@Autowired
 	OrdersImpl OrdersInterface;
 	
 	@PostMapping("/addOrders")
-	public Orders addOrders(@RequestBody OrderDto orders) {
-		return OrdersInterface.addOrders(orders);
+	public ResponseEntity<Orders> addOrders(@RequestBody OrderDto orders) {
+		Orders orderAdded= OrdersInterface.addOrders(orders);
+		return ResponseEntity.status(HttpStatus.CREATED).body(orderAdded);
+				
 	}
 	
 	@GetMapping("/getAllOrder")
-	public List<Orders> getAllorder(@RequestBody Orders orders) {
-		return OrdersInterface.getAllOrder();
+	public ResponseEntity<List<Orders>> getAllorder(@RequestBody Orders orders) {
+		List<Orders> allOrders= OrdersInterface.getAllOrder();
+		if(!allOrders.isEmpty()) {
+			return ResponseEntity.ok(allOrders);
+		}
+		else {
+			return ResponseEntity.noContent().build();
+			
+		}
 	}
 	
+	
 	@DeleteMapping("/deleteOrderById")
-	public void deleteOrderById(@RequestBody Orders orders) {
+	public ResponseEntity<Void> deleteOrderById(@RequestBody Orders orders) {
 		OrdersInterface.deleteOrderById(orders.getOrder_id());
+		return ResponseEntity.noContent().build();
 	}
 	
 }

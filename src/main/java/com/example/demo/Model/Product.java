@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 public class Product {
   
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	int product_id;
 	String product_name;
 	double product_price;

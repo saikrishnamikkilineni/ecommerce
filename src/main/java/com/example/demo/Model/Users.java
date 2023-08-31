@@ -1,5 +1,7 @@
 package com.example.demo.Model;
 
+import java.util.List;
+
 import com.example.demo.status.UserStatus;
 
 import jakarta.persistence.Column;
@@ -9,6 +11,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,13 +19,23 @@ import jakarta.persistence.Table;
 public class Users {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	int user_id;
 	String user_name,password,email;
 	
 	 @Enumerated(EnumType.STRING)
 	 @Column(name = "status")
 	    UserStatus status = UserStatus.Blocked;
+	 
+	 @OneToMany
+		private List<Cart> cart;
+		
+		public List<Cart> getCart() {
+			return cart;
+		}
+		public void setCart(List<Cart> cart) {
+			this.cart = cart;
+		}
 	
 	public int getUser_id() {
 		return user_id;

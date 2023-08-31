@@ -1,15 +1,14 @@
 package com.example.demo.Model;
 
 import java.sql.Date;
-
-
-
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 
@@ -24,9 +23,10 @@ public class Orders {
 	@JoinColumn(name="user_id")
 	Users users;
 	
-	@ManyToOne
+	@ManyToMany
+	private List<Product> products;
 	@JoinColumn(name="product_id")
-	Product product;
+	
 	
 	
 	Date order_date;
@@ -58,12 +58,14 @@ public class Orders {
 	public void setUsers(Users users) {
 		this.users = users;
 	}
-	public Product getProduct() {
-		return product;
+	public List<Product> getProducts() {
+		return products;
 	}
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProducts(List<Product> products) {
+		this.products = products;
 	}
+	
+	
 	
 	
 	
