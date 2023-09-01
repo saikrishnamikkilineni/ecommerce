@@ -4,8 +4,6 @@ public enum UserStatus {
 
 	
 	Blocked,
-	UnBlocked, 
-	Delivered,
-	Pending,
+	UnBlocked
 	
 }

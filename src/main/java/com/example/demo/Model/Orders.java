@@ -1,9 +1,15 @@
 package com.example.demo.Model;
 
-import java.sql.Date;
+
+import java.util.Date;
 import java.util.List;
 
+import com.example.demo.status.OrderStatus;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,11 +34,13 @@ public class Orders {
 	@JoinColumn(name="product_id")
 	
 	
-	
+	@Column(name="order_date")
 	Date order_date;
 	
-
-	String  status;
+	
+	 @Enumerated(EnumType.STRING)
+	 @Column(name = "status")
+	    OrderStatus status = OrderStatus.Pending;
 	
 	public int getOrder_id() {
 		return order_id;
@@ -43,13 +51,13 @@ public class Orders {
 	public Date getOrder_date() {
 		return order_date;
 	}
-	public void setOrder_date(Date order_date) {
-		this.order_date = order_date;
+	public void setOrder_date(Date date) {
+		this.order_date = date;
 	}
-	public String getStatus() {
+	public OrderStatus getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
 	public Users getUsers() {
